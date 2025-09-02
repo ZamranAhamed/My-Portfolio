@@ -402,10 +402,59 @@ section {
   margin-bottom: 1rem;
 }
 
+.span {
+  color: #f4b400;
+  font-weight: bold;
+}
+
 .project-card:hover {
   transform: scale(1.03);
   background: #f4b400;
   color: #000;
+}
+
+.project-card:hover .span {
+  color: red;
+  font-weight: bold;
+}
+
+/* ====== Experience ====== */
+.experience-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.experience-card {
+  width: 300px;
+  background: #1c1c1c;
+  padding: 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.experience-card img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.span {
+  color: #f4b400;
+  font-weight: bold;
+}
+
+.experience-card:hover {
+  transform: scale(1.03);
+  background: #f4b400;
+  color: #000;
+}
+
+.experience-card:hover .span {
+  color: red;
+  font-weight: bold;
 }
 
 /* ====== Contact ====== */
