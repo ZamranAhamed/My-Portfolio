@@ -5,11 +5,25 @@
   box-sizing: border-box;
 }
 
+html {
+  background-color: #0f0f0f;
+}
+
 body {
   background-color: #0f0f0f;
+  background-image: linear-gradient(-45deg, #0f0f0f, #1a1a1a, #0a0a0a, #2a2a2a);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
   font-family: 'Segoe UI', sans-serif;
   color: white;
   line-height: 1.6;
+  overflow-x: hidden;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* ====== Navbar ====== */
@@ -124,7 +138,7 @@ header {
   border: none;
   margin-right: 1rem;
   font-weight: bold;
-  transition: background 0.3s;
+  transition: all 0.3s ease, transform 0.1s ease;
 }
 
 .btn-outline {
@@ -134,13 +148,25 @@ header {
   padding: 0.7rem 1.5rem;
   border-radius: 30px;
   font-weight: bold;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease, transform 0.1s ease;
 }
 
-.btn-yellow:hover,
+.btn-yellow:hover {
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(244, 180, 0, 0.6);
+  transform: translateY(-2px);
+}
+
 .btn-outline:hover {
   cursor: pointer;
-  opacity: 0.8;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.btn-yellow:active,
+.btn-outline:active {
+  transform: scale(0.95);
 }
 
 .btn-small {
@@ -152,6 +178,16 @@ header {
   text-decoration: none;
   display: inline-block;
   width: fit-content;
+  transition: all 0.3s ease, transform 0.1s ease;
+}
+
+.btn-small:hover {
+  box-shadow: 0 0 10px rgba(244, 180, 0, 0.6);
+  transform: translateY(-2px);
+}
+
+.btn-small:active {
+  transform: scale(0.95);
 }
 
 .home-image {
@@ -373,6 +409,8 @@ section {
 .service-card:hover {
   background: #f4b400;
   color: #000;
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(244, 180, 0, 0.4);
 }
 
 .service-card:hover img {
@@ -408,9 +446,10 @@ section {
 }
 
 .project-card:hover {
-  transform: scale(1.03);
+  transform: translateY(-8px) scale(1.02);
   background: #f4b400;
   color: #000;
+  box-shadow: 0 15px 30px rgba(244, 180, 0, 0.4);
 }
 
 .project-card:hover .span {
@@ -447,9 +486,10 @@ section {
 }
 
 .experience-card:hover {
-  transform: scale(1.03);
+  transform: translateY(-8px) scale(1.02);
   background: #f4b400;
   color: #000;
+  box-shadow: 0 15px 30px rgba(244, 180, 0, 0.4);
 }
 
 .experience-card:hover .span {
@@ -544,10 +584,17 @@ section {
   width: fit-content;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
+  transition: all 0.3s ease, transform 0.1s ease;
 }
 
 #contactform button:hover {
   background-color: #ffc107;
+  box-shadow: 0 0 15px rgba(244, 180, 0, 0.6);
+  transform: translateY(-2px);
+}
+
+#contactform button:active {
+  transform: scale(0.95);
 }
 
 /* Responsive */
@@ -584,10 +631,17 @@ form button {
   border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
+  transition: all 0.3s ease, transform 0.1s ease;
 }
 
 form button:hover {
   background: #ffc107;
+  box-shadow: 0 0 15px rgba(244, 180, 0, 0.6);
+  transform: translateY(-2px);
+}
+
+form button:active {
+  transform: scale(0.95);
 }
 
 /* ====== Footer ====== */
@@ -788,3 +842,14 @@ footer {
   }
 }
 
+/* Scroll Reveal Animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px) scale(0.98);
+  transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
