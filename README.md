@@ -2,6 +2,9 @@
 
 A clean and responsive **personal portfolio website** developed using **HTML, CSS, and JavaScript**. This project showcases all the academic, personal activities, and contact information of **Zamran Ahamed** in a structured and elegant manner.
 
+### Open here
+https://my-portfolio-six-black-31.vercel.app/
+
 ---
 
 ## 📌 Description
