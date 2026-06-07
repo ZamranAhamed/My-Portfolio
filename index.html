@@ -364,7 +364,7 @@
       <div class="hero-rings">
         <div class="hr"></div><div class="hr"></div><div class="hr"></div>
       </div>
-      <div class="floater f1"><strong>6+</strong><span>Projects Built</span></div>
+      <div class="floater f1"><strong id="project-count">6+</strong><span>Projects Built</span></div>
       <div class="floater f2"><strong>MERN</strong><span>Stack Dev</span></div>
       <div class="hero-img-border"></div>
       <div class="hero-img-outer">
@@ -776,6 +776,11 @@ const skObs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{if(e.isIntersecting){e.target.style.width=e.target.dataset.w+'%';skObs.unobserve(e.target);}});
 },{threshold:.25});
 fills.forEach(f=>skObs.observe(f));
+
+/* ── PROJECT COUNT UPDATE ──────────────────── */
+const projectCards = document.querySelectorAll('.proj-card');
+const projectCountEl = document.getElementById('project-count');
+if(projectCountEl) projectCountEl.textContent = projectCards.length + '+';
 </script>
 </body>
 </html>
