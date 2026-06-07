@@ -5,15 +5,818 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zamran Ahamed | Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <script defer src="script.js"></script>
+
+  <style>
+    /* ============================================================
+       CSS CUSTOM PROPERTIES
+    ============================================================ */
+    :root {
+      --gold: #f5c518;
+      --gold-dim: #c49a14;
+      --gold-glow: rgba(245, 197, 24, 0.18);
+      --bg-deep: #050508;
+      --bg-mid: #0c0c14;
+      --bg-card: rgba(255, 255, 255, 0.04);
+      --bg-card-hover: rgba(255, 255, 255, 0.07);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-border-gold: rgba(245, 197, 24, 0.25);
+      --text-primary: #f0f0f8;
+      --text-muted: rgba(240, 240, 248, 0.5);
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --radius: 18px;
+      --radius-sm: 10px;
+      --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; background: var(--bg-deep); }
+
+    body {
+      background: var(--bg-deep);
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      line-height: 1.7;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ============================================================
+       CUSTOM CURSOR
+    ============================================================ */
+    #cursor-dot {
+      width: 8px; height: 8px;
+      background: var(--gold);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 99999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s, width 0.2s, height 0.2s;
+    }
+    #cursor-ring {
+      width: 36px; height: 36px;
+      border: 1.5px solid rgba(245, 197, 24, 0.5);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 99998;
+      transform: translate(-50%, -50%);
+      transition: all 0.12s ease;
+    }
+    body:has(a:hover) #cursor-dot,
+    body:has(button:hover) #cursor-dot { width: 14px; height: 14px; }
+    body:has(a:hover) #cursor-ring,
+    body:has(button:hover) #cursor-ring { width: 52px; height: 52px; border-color: var(--gold); }
+
+    /* ============================================================
+       GLOBAL CANVAS BACKGROUND
+    ============================================================ */
+    #bg-canvas {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      z-index: 0; pointer-events: none;
+    }
+
+    /* ============================================================
+       GRADIENT ORBS
+    ============================================================ */
+    .orb-container {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+    }
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(90px); opacity: 0.12;
+      animation: orbFloat 20s ease-in-out infinite;
+    }
+    .orb-1 { width: 600px; height: 600px; background: var(--gold); top: -200px; right: -150px; animation-delay: 0s; }
+    .orb-2 { width: 500px; height: 500px; background: #8844ff; bottom: -100px; left: -150px; animation-delay: -7s; }
+    .orb-3 { width: 350px; height: 350px; background: var(--gold); bottom: 30%; left: 40%; animation-delay: -14s; opacity: 0.07; }
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(40px, -60px) scale(1.08); }
+      66% { transform: translate(-30px, 40px) scale(0.95); }
+    }
+
+    /* ============================================================
+       GRID LINES OVERLAY
+    ============================================================ */
+    .grid-overlay {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(245, 197, 24, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245, 197, 24, 0.025) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+
+    /* ============================================================
+       SECTION WRAPPER
+    ============================================================ */
+    section { position: relative; z-index: 1; }
+
+    /* ============================================================
+       NAVBAR
+    ============================================================ */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      padding: 0 2.5rem;
+      height: 68px;
+      display: flex; align-items: center;
+      background: rgba(5, 5, 8, 0.75);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      transition: var(--transition);
+    }
+    header.scrolled { background: rgba(5, 5, 8, 0.95); box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
+
+    .navbar {
+      width: 100%; display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.3rem; font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff 30%, var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .navbar ul {
+      display: flex; gap: 2rem; list-style: none;
+    }
+    .navbar ul a {
+      font-family: var(--font-body); font-size: 0.85rem; font-weight: 500;
+      color: var(--text-muted); text-decoration: none; letter-spacing: 0.04em;
+      text-transform: uppercase;
+      position: relative; padding-bottom: 4px;
+      transition: color var(--transition);
+    }
+    .navbar ul a::after {
+      content: ''; position: absolute; bottom: 0; left: 0;
+      width: 0; height: 1.5px;
+      background: var(--gold);
+      transition: width var(--transition);
+    }
+    .navbar ul a:hover { color: var(--text-primary); }
+    .navbar ul a:hover::after { width: 100%; }
+
+    /* ============================================================
+       SECTION TITLES
+    ============================================================ */
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      width: fit-content;
+      margin: 0 auto 3.5rem;
+      text-align: center;
+      position: relative;
+      display: block;
+    }
+    .section-title span.line {
+      display: block;
+      width: 50px; height: 3px;
+      background: var(--gold);
+      margin: 0.6rem auto 0;
+      border-radius: 2px;
+    }
+
+    /* ============================================================
+       HOME SECTION
+    ============================================================ */
+    #home {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 120px 6vw 60px;
+      position: relative; overflow: hidden;
+    }
+
+    /* Animated rings behind hero */
+    .hero-rings {
+      position: absolute; right: 5%; top: 50%;
+      transform: translateY(-50%);
+      width: 560px; height: 560px;
+      pointer-events: none; z-index: 0;
+    }
+    .hero-rings .ring {
+      position: absolute; border-radius: 50%;
+      border: 1px solid rgba(245, 197, 24, 0.12);
+      animation: ringSpin 30s linear infinite;
+    }
+    .hero-rings .ring:nth-child(1) { inset: 0; animation-duration: 30s; }
+    .hero-rings .ring:nth-child(2) { inset: 40px; border-color: rgba(245,197,24,0.08); animation-duration: 45s; animation-direction: reverse; }
+    .hero-rings .ring:nth-child(3) { inset: 90px; border-style: dashed; animation-duration: 60s; }
+    .hero-rings .ring:nth-child(4) { inset: 150px; animation-duration: 25s; animation-direction: reverse; border-color: rgba(136, 68, 255, 0.15); }
+    @keyframes ringSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .home-container {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      width: 100%; max-width: 1300px; margin: 0 auto;
+      position: relative; z-index: 1;
+      gap: 3rem;
+    }
+
+    .home-text { flex: 1; }
+
+    .intro-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px;
+      border: 1px solid var(--glass-border-gold);
+      border-radius: 100px;
+      font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em;
+      color: var(--gold); text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      background: rgba(245, 197, 24, 0.06);
+      animation: fadeInUp 0.6s ease both;
+    }
+    .intro-badge .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--gold);
+      animation: pulse 2s ease infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.7); } }
+
+    .home-text h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 5.5vw, 5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      animation: fadeInUp 0.7s 0.1s ease both;
+    }
+    .home-text h1 .name-highlight {
+      background: linear-gradient(135deg, var(--gold), #fff 60%, var(--gold));
+      background-size: 200% auto;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4s linear infinite;
+    }
+    @keyframes shimmer { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
+
+    .home-text .subtitle {
+      font-size: 1rem; font-weight: 300;
+      color: var(--text-muted); max-width: 500px;
+      margin-bottom: 2.5rem;
+      animation: fadeInUp 0.7s 0.2s ease both;
+    }
+
+    .home-buttons {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      animation: fadeInUp 0.7s 0.3s ease both;
+    }
+
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
+    .btn-gold {
+      padding: 13px 32px;
+      background: var(--gold);
+      color: #050508;
+      font-family: var(--font-body); font-size: 0.9rem; font-weight: 600;
+      border: none; border-radius: 100px;
+      cursor: pointer; letter-spacing: 0.04em;
+      transition: var(--transition);
+      position: relative; overflow: hidden;
+    }
+    .btn-gold::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, #fff4 0%, transparent 100%);
+      opacity: 0; transition: opacity var(--transition);
+    }
+    .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(245, 197, 24, 0.45); }
+    .btn-gold:hover::before { opacity: 1; }
+
+    .btn-ghost {
+      padding: 12px 32px;
+      background: transparent;
+      color: var(--text-primary);
+      font-family: var(--font-body); font-size: 0.9rem; font-weight: 500;
+      border: 1.5px solid var(--glass-border);
+      border-radius: 100px;
+      cursor: pointer; letter-spacing: 0.04em;
+      transition: var(--transition);
+    }
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+
+    .btn-small {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 22px;
+      background: var(--gold);
+      color: #050508;
+      font-family: var(--font-body); font-size: 0.82rem; font-weight: 600;
+      border-radius: 100px; text-decoration: none;
+      transition: var(--transition); letter-spacing: 0.04em;
+    }
+    .btn-small:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,197,24,0.4); }
+
+    /* ============================================================
+       HOME IMAGE
+    ============================================================ */
+    .home-image {
+      flex: 0 0 auto; position: relative;
+      width: min(460px, 45vw);
+      animation: fadeInUp 0.9s 0.1s ease both;
+      z-index: 1;
+    }
+    .home-image::before {
+      content: ''; position: absolute;
+      inset: -3px; border-radius: 50%;
+      background: conic-gradient(var(--gold), transparent 40%, var(--gold) 60%, transparent);
+      animation: ringSpin 6s linear infinite;
+      z-index: -1;
+    }
+    .home-image .img-wrap {
+      border-radius: 50%; overflow: hidden;
+      aspect-ratio: 1;
+      border: 4px solid var(--bg-deep);
+      box-shadow: 0 0 80px rgba(245,197,24,0.2);
+    }
+    .home-image img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: top;
+      display: block;
+    }
+
+    /* Stat badges floating around hero image */
+    .stat-badge {
+      position: absolute;
+      background: rgba(12, 12, 20, 0.85);
+      border: 1px solid var(--glass-border-gold);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      font-size: 0.8rem; color: var(--text-muted);
+      white-space: nowrap;
+      animation: badgeFloat 4s ease-in-out infinite;
+    }
+    .stat-badge strong { display: block; font-family: var(--font-display); font-size: 1.3rem; color: var(--gold); font-weight: 700; }
+    .stat-badge.sb-1 { top: 10%; left: -70px; animation-delay: 0s; }
+    .stat-badge.sb-2 { bottom: 15%; right: -70px; animation-delay: -2s; }
+    @keyframes badgeFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============================================================
+       ABOUT SECTION
+    ============================================================ */
+    #about {
+      padding: 120px 6vw;
+      background: linear-gradient(180deg, transparent 0%, rgba(245,197,24,0.03) 50%, transparent 100%);
+    }
+    .about-container {
+      display: flex; gap: 5rem; align-items: center;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .about-image {
+      flex: 0 0 auto; width: min(320px, 35vw);
+      position: relative;
+    }
+    .about-image::after {
+      content: '';
+      position: absolute; bottom: -16px; right: -16px;
+      width: 100%; height: 100%;
+      border: 2px solid var(--glass-border-gold);
+      border-radius: var(--radius);
+      z-index: -1;
+    }
+    .about-image img {
+      width: 100%; border-radius: var(--radius);
+      object-fit: cover; display: block;
+      aspect-ratio: 3/4;
+      filter: grayscale(20%);
+      transition: filter var(--transition);
+    }
+    .about-image:hover img { filter: grayscale(0); }
+
+    .about-details h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 800; letter-spacing: -0.03em;
+      margin-bottom: 2rem;
+    }
+    .about-details h2 em { color: var(--gold); font-style: normal; }
+
+    .about-info-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0.6rem 2rem; margin-bottom: 2rem;
+    }
+    .about-info-item {
+      display: flex; flex-direction: column;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .about-info-item .label { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 3px; }
+    .about-info-item .value { font-size: 0.92rem; color: var(--text-muted); font-weight: 400; }
+
+    /* ============================================================
+       EDUCATION SECTION
+    ============================================================ */
+    #education {
+      padding: 120px 6vw;
+    }
+    .education-timeline {
+      max-width: 900px; margin: 0 auto;
+      position: relative;
+    }
+    .education-timeline::before {
+      content: '';
+      position: absolute; left: 18px; top: 0; bottom: 0;
+      width: 1px; background: linear-gradient(180deg, transparent, var(--glass-border-gold), transparent);
+    }
+    .edu-item {
+      display: flex; gap: 2.5rem; margin-bottom: 3rem;
+      position: relative;
+    }
+    .edu-dot {
+      flex: 0 0 auto;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--bg-deep);
+      border: 2px solid var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; z-index: 1;
+      box-shadow: 0 0 20px rgba(245,197,24,0.25);
+    }
+    .edu-dot::after {
+      content: ''; width: 10px; height: 10px;
+      border-radius: 50%; background: var(--gold);
+    }
+    .edu-content {
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 1.8rem 2rem;
+      transition: var(--transition);
+    }
+    .edu-content:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--glass-border-gold);
+      transform: translateX(4px);
+    }
+    .edu-year {
+      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gold); font-weight: 600; margin-bottom: 0.4rem;
+    }
+    .edu-content h3 {
+      font-family: var(--font-display); font-size: 1.1rem; font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+    .edu-content h4 { font-size: 0.85rem; color: var(--text-muted); font-weight: 400; margin-bottom: 0.8rem; }
+    .edu-content p { font-size: 0.88rem; color: rgba(240,240,248,0.45); line-height: 1.7; }
+
+    /* ============================================================
+       SERVICES SECTION
+    ============================================================ */
+    #services {
+      padding: 120px 6vw;
+      background: linear-gradient(180deg, transparent, rgba(136,68,255,0.04) 50%, transparent);
+    }
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem; max-width: 1100px; margin: 0 auto;
+    }
+    .service-card {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 2.5rem 1.5rem;
+      text-align: center; cursor: pointer;
+      transition: var(--transition);
+      position: relative; overflow: hidden;
+    }
+    .service-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(245,197,24,0.08) 0%, transparent 70%);
+      opacity: 0; transition: opacity var(--transition);
+    }
+    .service-card:hover { border-color: var(--glass-border-gold); transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
+    .service-card:hover::before { opacity: 1; }
+    .service-card img { width: 48px; height: 48px; margin: 0 auto 1.2rem; display: block; filter: brightness(0) invert(1) sepia(100%) saturate(500%) hue-rotate(5deg); opacity: 0.8; transition: opacity var(--transition); }
+    .service-card:hover img { opacity: 1; }
+    .service-card h4 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; }
+
+    /* ============================================================
+       SKILLS SECTION
+    ============================================================ */
+    .skills-section {
+      padding: 120px 6vw;
+    }
+    .skills-wrapper {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+    .skills-category {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      transition: border-color var(--transition);
+    }
+    .skills-category:hover { border-color: var(--glass-border-gold); }
+    .skills-category h3 {
+      font-family: var(--font-display); font-size: 0.9rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .skills-category h3::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, var(--glass-border-gold), transparent);
+    }
+
+    .skill { margin-bottom: 1.1rem; }
+    .skill-name {
+      display: flex; justify-content: space-between;
+      font-size: 0.87rem; margin-bottom: 6px;
+      color: var(--text-muted);
+    }
+    .skill-name span { color: var(--gold); font-weight: 600; font-size: 0.8rem; }
+    .skill-bar {
+      height: 4px; border-radius: 2px;
+      background: rgba(255,255,255,0.06); overflow: hidden;
+    }
+    .skill-bar-fill {
+      height: 100%; border-radius: 2px;
+      background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+      width: 0; transition: width 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 0 8px rgba(245,197,24,0.4);
+    }
+
+    /* ============================================================
+       PROJECTS SECTION
+    ============================================================ */
+    #projects {
+      padding: 120px 6vw;
+      background: linear-gradient(180deg, transparent, rgba(245,197,24,0.03) 50%, transparent);
+    }
+    .project-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem; max-width: 1200px; margin: 0 auto;
+    }
+    .project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      overflow: hidden; cursor: pointer;
+      transition: var(--transition);
+      group: true;
+    }
+    .project-card:hover { border-color: var(--glass-border-gold); transform: translateY(-6px); box-shadow: 0 24px 60px rgba(0,0,0,0.5); }
+
+    .project-imgs {
+      position: relative; overflow: hidden;
+      aspect-ratio: 16/9;
+    }
+    .project-imgs img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; object-fit: cover;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .project-imgs img:first-child { opacity: 1; transform: scale(1); }
+    .project-imgs img:last-child { opacity: 0; transform: scale(1.04); }
+    .project-card:hover .project-imgs img:first-child { opacity: 0; transform: scale(1.04); }
+    .project-card:hover .project-imgs img:last-child { opacity: 1; transform: scale(1); }
+
+    .project-info { padding: 1.4rem 1.6rem 1.8rem; }
+    .project-info h3 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .project-info > p:first-of-type { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.6rem; }
+    .project-info .tech-tag {
+      display: inline-flex; align-items: center;
+      font-size: 0.76rem; color: var(--gold);
+      background: rgba(245,197,24,0.08);
+      border: 1px solid rgba(245,197,24,0.2);
+      padding: 3px 10px; border-radius: 100px;
+      font-weight: 500; letter-spacing: 0.03em;
+    }
+
+    /* ============================================================
+       EXPERIENCE SECTION
+    ============================================================ */
+    #experiences {
+      padding: 120px 6vw;
+    }
+    .experience-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem; max-width: 1200px; margin: 0 auto;
+    }
+    .experience-card {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      overflow: hidden; cursor: pointer;
+      transition: var(--transition);
+    }
+    .experience-card:hover { border-color: var(--glass-border-gold); transform: translateY(-6px); box-shadow: 0 24px 60px rgba(0,0,0,0.5); }
+
+    .exp-imgs { position: relative; overflow: hidden; aspect-ratio: 16/9; }
+    .exp-imgs img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; object-fit: cover;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .exp-imgs img:first-child { opacity: 1; }
+    .exp-imgs img:last-child { opacity: 0; }
+    .experience-card:hover .exp-imgs img:first-child { opacity: 0; }
+    .experience-card:hover .exp-imgs img:last-child { opacity: 1; }
+    .exp-imgs img:only-child { opacity: 1 !important; }
+
+    .exp-info { padding: 1.4rem 1.6rem 1.8rem; }
+    .exp-info h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 0.6rem; }
+    .exp-info p { font-size: 0.83rem; color: var(--text-muted); margin-bottom: 0.3rem; line-height: 1.5; }
+    .exp-info .tech-tag {
+      margin-top: 0.8rem;
+      display: inline-flex; align-items: center;
+      font-size: 0.76rem; color: var(--gold);
+      background: rgba(245,197,24,0.08);
+      border: 1px solid rgba(245,197,24,0.2);
+      padding: 3px 10px; border-radius: 100px;
+      font-weight: 500;
+    }
+
+    /* ============================================================
+       CONTACT SECTION
+    ============================================================ */
+    #contact {
+      padding: 120px 6vw;
+      background: linear-gradient(180deg, transparent, rgba(136,68,255,0.04) 60%, transparent);
+    }
+    .contact-top {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem; max-width: 1000px;
+      margin: 0 auto 4rem;
+    }
+    .contact-item {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 1.8rem 1.5rem; text-align: center;
+      transition: var(--transition);
+    }
+    .contact-item:hover { border-color: var(--glass-border-gold); transform: translateY(-4px); }
+    .contact-item img { width: 36px; height: 36px; margin: 0 auto 0.8rem; display: block; filter: brightness(0) invert(1) sepia(100%) saturate(500%) hue-rotate(5deg); opacity: 0.7; }
+    .contact-item h4 { font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .contact-item p { font-size: 0.82rem; color: var(--text-muted); }
+
+    .contact-form-container {
+      display: flex; gap: 4rem; align-items: flex-start;
+      max-width: 1000px; margin: 0 auto;
+    }
+    .contact-image {
+      flex: 0 0 auto; width: min(240px, 30vw);
+      position: relative;
+    }
+    .contact-image img {
+      width: 100%; border-radius: var(--radius);
+      object-fit: cover; object-position: top;
+      display: block; aspect-ratio: 3/4;
+      filter: grayscale(30%);
+    }
+    .contact-image::before {
+      content: ''; position: absolute;
+      top: -10px; left: -10px; right: 10px; bottom: 10px;
+      border: 1px solid var(--glass-border-gold); border-radius: var(--radius); z-index: -1;
+    }
+
+    #contactform {
+      flex: 1; display: flex; flex-direction: column; gap: 1rem;
+    }
+    #contactform input, #contactform textarea {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      color: var(--text-primary);
+      font-family: var(--font-body); font-size: 0.9rem;
+      transition: border-color var(--transition);
+      outline: none; resize: none;
+    }
+    #contactform input::placeholder, #contactform textarea::placeholder { color: rgba(240,240,248,0.3); }
+    #contactform input:focus, #contactform textarea:focus { border-color: var(--gold); background: rgba(245,197,24,0.04); }
+    #contactform textarea { min-height: 130px; }
+    #contactform button { align-self: flex-start; }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      background: rgba(0,0,0,0.5);
+      border-top: 1px solid var(--glass-border);
+      padding: 4rem 6vw 2rem;
+      position: relative; z-index: 1;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 3rem; max-width: 1200px; margin: 0 auto 2rem;
+    }
+    .footer-column h4 {
+      font-family: var(--font-display); font-size: 0.85rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 1.2rem; color: var(--gold);
+    }
+    .footer-socials { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+    .footer-socials a {
+      width: 38px; height: 38px;
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      transition: var(--transition);
+    }
+    .footer-socials a:hover { border-color: var(--gold); transform: translateY(-3px); background: rgba(245,197,24,0.1); }
+    .footer-socials img { width: 16px; height: 16px; filter: brightness(0) invert(1); opacity: 0.6; }
+    .footer-socials a:hover img { opacity: 1; }
+
+    .footer-links { list-style: none; }
+    .footer-links li { margin-bottom: 0.6rem; }
+    .footer-links a { font-size: 0.88rem; color: var(--text-muted); text-decoration: none; transition: color var(--transition); }
+    .footer-links a:hover { color: var(--gold); }
+
+    .footer-column p {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.7rem;
+    }
+    .footer-column p img { width: 16px; height: 16px; flex-shrink: 0; filter: brightness(0) invert(1); opacity: 0.5; margin-top: 2px; }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid var(--glass-border);
+      font-size: 0.8rem; color: var(--text-muted);
+    }
+
+    /* ============================================================
+       SCROLL REVEAL
+    ============================================================ */
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (hover: none), (pointer: coarse) {
+      body { cursor: auto; }
+      #cursor-dot,
+      #cursor-ring { display: none; }
+    }
+
+    @media (max-width: 900px) {
+      .home-container { flex-direction: column-reverse; text-align: center; }
+      .home-image { width: min(300px, 70vw); }
+      .home-buttons { justify-content: center; }
+      .hero-rings { display: none; }
+      .stat-badge { display: none; }
+      .about-container { flex-direction: column; }
+      .about-image { width: min(260px, 60vw); margin: 0 auto; }
+      .contact-form-container { flex-direction: column; }
+      .contact-image { width: min(200px, 50vw); margin: 0 auto; }
+      .navbar ul { gap: 1rem; }
+      .navbar ul a { font-size: 0.75rem; }
+    }
+    @media (max-width: 600px) {
+      .navbar ul { display: none; }
+      header { padding: 0 1.5rem; }
+    }
+  </style>
 </head>
 
 <body>
-  <!-- Header with logo and nav -->
-  <header>
+  <!-- Custom cursor -->
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- Background layers -->
+  <canvas id="bg-canvas"></canvas>
+  <div class="orb-container">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="grid-overlay"></div>
+
+  <!-- ============================================================
+       HEADER
+  ============================================================ -->
+  <header id="main-header">
     <nav class="navbar">
-      <div class="logo">My PortFolio</div>
+      <div class="logo">ZAM.</div>
       <ul>
         <li><a href="#home">Home</a></li>
         <li><a href="#about">About</a></li>
@@ -27,543 +830,454 @@
     </nav>
   </header>
 
+  <!-- ============================================================
+       HOME SECTION
+  ============================================================ -->
   <section id="home">
+    <div class="hero-rings">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+    </div>
+
     <div class="home-container">
       <div class="home-text">
-        <p class="intro">HELLO!</p>
-        <h1>I'm <span class="highlight">Zamran Ahamed</span></h1>
-        <p>Software Engineer | Full Stack Developer | MERN Stack | Spring Boot | PHP | IT Undergraduate | SLIIT</p>
+        <div class="intro-badge"><span class="dot"></span> Available for Internship</div>
+        <h1>I'm <span class="name-highlight">Zamran<br>Ahamed</span></h1>
+        <p class="subtitle">Software Engineer · Full Stack Developer · MERN Stack · Spring Boot · PHP · IT Undergraduate @ SLIIT</p>
         <div class="home-buttons">
-          <button class="btn-yellow" onclick="window.location.href='mailto:zamranahamed7@gmail.com'">HIRE ME</button>
-          <button class="btn-outline" onclick="window.location.href='tel:0776026403'">CONTACT ME</button>
+          <button class="btn-gold" onclick="window.location.href='mailto:zamranahamed7@gmail.com'">Hire Me</button>
+          <button class="btn-ghost" onclick="window.location.href='tel:0776026403'">Contact Me</button>
         </div>
       </div>
+
       <div class="home-image">
-        <img src="images/Me_Official_rermoved_background.png" alt="Zamran Ahamed">
+        <div class="stat-badge sb-1"><strong>6+</strong>Projects Built</div>
+        <div class="stat-badge sb-2"><strong>MERN</strong>Stack Dev</div>
+        <div class="img-wrap">
+          <img src="images/Me_Official_rermoved_background.png" alt="Zamran Ahamed">
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- About Me Section -->
+  <!-- ============================================================
+       ABOUT SECTION
+  ============================================================ -->
   <section id="about">
-    <div class="about-container">
+    <h2 class="section-title reveal">About Me <span class="line"></span></h2>
+    <div class="about-container reveal">
       <div class="about-image">
         <img src="images/my_img_casual.jpg" alt="Zamran Ahamed">
       </div>
       <div class="about-details">
-        <h2>About Me</h2>
-        <p><strong>Name:</strong> Mohamed Aarif Zamran Ahamed</p>
-        <p><strong>Date of birth:</strong> January 7, 2003</p>
-        <p><strong>Address:</strong> No 93/3, Old Church Road, Bakinigahawela, Bibile</p>
-        <p><strong>Zip code:</strong> 91554</p>
-        <p><strong>Email:</strong> zamranahamed7@gmail.com</p>
-        <p><strong>Phone:</strong> +94 77 60 26 403 | +94 72 90 65 778</p>
-        <a href="Zamran_Ahamed (SE).pdf" download class="btn-small">Download CV</a>
+        <h2>Mohamed Aarif<br><em>Zamran Ahamed</em></h2>
+        <div class="about-info-grid">
+          <div class="about-info-item">
+            <span class="label">Date of Birth</span>
+            <span class="value">January 7, 2003</span>
+          </div>
+          <div class="about-info-item">
+            <span class="label">Zip Code</span>
+            <span class="value">91554</span>
+          </div>
+          <div class="about-info-item" style="grid-column: 1/-1;">
+            <span class="label">Address</span>
+            <span class="value">No 93/3, Old Church Road, Bakinigahawela, Bibile</span>
+          </div>
+          <div class="about-info-item">
+            <span class="label">Email</span>
+            <span class="value">zamranahamed7@gmail.com</span>
+          </div>
+          <div class="about-info-item">
+            <span class="label">Phone</span>
+            <span class="value">+94 77 60 26 403</span>
+          </div>
+        </div>
+        <a href="Zamran_Ahamed (SE).pdf" download class="btn-small">⬇ Download CV</a>
       </div>
     </div>
   </section>
 
-  <!-- Education Section -->
+  <!-- ============================================================
+       EDUCATION SECTION
+  ============================================================ -->
   <section id="education">
-    <h2>Education</h2>
-    <div class="education-grid">
-      <div class="education-card">
-        <h3>2022 - Present</h3>
-        <h4>BSC Hons in Information Technology</h4>
-        <h5>Sri Lanka Institute of Information Technology (SLIIT)</h5>
-        <p>The Bachelor of Science (Honours) in Information Technology at SLIIT provides a comprehensive foundation in
-          computing, software development, and IT systems. The program is designed to develop both technical expertise
-          and problem-solving skills, preparing students for dynamic roles in the global technology landscape.</p>
+    <h2 class="section-title reveal">Education <span class="line"></span></h2>
+    <div class="education-timeline">
+
+      <div class="edu-item reveal">
+        <div class="edu-dot"></div>
+        <div class="edu-content">
+          <div class="edu-year">2022 – Present</div>
+          <h3>BSC Hons in Information Technology</h3>
+          <h4>Sri Lanka Institute of Information Technology (SLIIT)</h4>
+          <p>The Bachelor of Science (Honours) in Information Technology at SLIIT provides a comprehensive foundation in computing, software development, and IT systems, preparing students for dynamic roles in the global technology landscape.</p>
+        </div>
       </div>
 
-      <div class="education-card">
-        <h3>2022</h3>
-        <h4>Successfully Completed G.C.E. Advanced Level Examination</h4>
-        <h5>MO/Bakinigahawela Muslim Central College</h5>
-        <p>The G.C.E Advanced Level Exam in the Physical Science stream in Sri Lanka is a challenging assessment,
-          offering students specialized knowledge and opportunities for advanced studies in physics, chemistry and
-          related fields.</p>
+      <div class="edu-item reveal">
+        <div class="edu-dot"></div>
+        <div class="edu-content">
+          <div class="edu-year">2022</div>
+          <h3>G.C.E. Advanced Level Examination</h3>
+          <h4>MO/Bakinigahawela Muslim Central College</h4>
+          <p>Successfully completed the G.C.E Advanced Level Exam in the Physical Science stream, offering specialized knowledge in physics, chemistry and related fields.</p>
+        </div>
       </div>
 
-      <div class="education-card">
-        <h3>2018</h3>
-        <h4>Successfully Completed G.C.E. Ordinary Level Examination</h4>
-        <h5>KM/Zahira College Kalmunai</h5>
-        <p>The G.C.E Ordinary Level Exam in Sri Lanka is a crucial standardized test for students, evaluating their
-          knowledge in various subjects and paving the way for further education and employment.</p>
+      <div class="edu-item reveal">
+        <div class="edu-dot"></div>
+        <div class="edu-content">
+          <div class="edu-year">2018</div>
+          <h3>G.C.E. Ordinary Level Examination</h3>
+          <h4>KM/Zahira College Kalmunai</h4>
+          <p>Successfully completed the G.C.E Ordinary Level Exam in Sri Lanka, evaluating knowledge across various subjects and paving the way for further education.</p>
+        </div>
       </div>
+
     </div>
-
-    <div style="text-align: center;">
-      <a href="Zamran_Ahamed (SE).pdf" download class="btn-small">Download CV</a>
+    <div style="text-align:center; margin-top:2rem;" class="reveal">
+      <a href="Zamran_Ahamed (SE).pdf" download class="btn-small">⬇ Download CV</a>
     </div>
   </section>
 
-  <!-- Services Section -->
+  <!-- ============================================================
+       SERVICES SECTION
+  ============================================================ -->
   <section id="services">
-    <h2>Services</h2>
+    <h2 class="section-title reveal">Services <span class="line"></span></h2>
     <div class="service-grid">
-      <div class="service-card" onclick="window.location.href='https://www.linkedin.com/in/zamran-ahamed-47a1852b5/'">
+      <div class="service-card reveal" onclick="window.location.href='https://www.linkedin.com/in/zamran-ahamed-47a1852b5/'">
         <img src="icons/web-design.svg" alt="Web Design Icon">
         <h4>Web Design</h4>
       </div>
-      <div class="service-card" onclick="window.location.href='https://www.linkedin.com/in/zamran-ahamed-47a1852b5/'">
+      <div class="service-card reveal" onclick="window.location.href='https://www.linkedin.com/in/zamran-ahamed-47a1852b5/'">
         <img src="icons/app-develop.svg" alt="App Developing Icon">
         <h4>App Developing</h4>
       </div>
-      <div class="service-card" onclick="window.location.href='https://wa.me/0729065778'">
+      <div class="service-card reveal" onclick="window.location.href='https://wa.me/0729065778'">
         <img src="icons/video-editing.svg" alt="Video Editing Icon">
         <h4>Video Editing</h4>
       </div>
-      <div class="service-card" onclick="window.location.href='https://www.linkedin.com/in/zamran-ahamed-47a1852b5/'">
+      <div class="service-card reveal" onclick="window.location.href='https://www.linkedin.com/in/zamran-ahamed-47a1852b5/'">
         <img src="icons/web-dev.svg" alt="Web Developing Icon">
         <h4>Web Developing</h4>
       </div>
-      <div class="service-card" onclick="window.location.href='https://wa.me/0729065778'">
+      <div class="service-card reveal" onclick="window.location.href='https://wa.me/0729065778'">
         <img src="icons/assignment.svg" alt="Assignment Writing Icon">
         <h4>Assignment Writing</h4>
       </div>
-      <div class="service-card" onclick="window.location.href='https://wa.me/0729065778'">
+      <div class="service-card reveal" onclick="window.location.href='https://wa.me/0729065778'">
         <img src="icons/typing.svg" alt="Typing Icon">
         <h4>Typing</h4>
       </div>
     </div>
   </section>
 
-
-  <!-- Skills Section -->
+  <!-- ============================================================
+       SKILLS SECTION
+  ============================================================ -->
   <section class="skills-section" id="skills">
-    <h2>My Skills</h2>
+    <h2 class="section-title reveal">My Skills <span class="line"></span></h2>
+    <div class="skills-wrapper">
 
-    <div class="skills-category">
-      <h3>Front-end</h3>
-      <div class="skill">
-        <div class="skill-name">HTML5 <span>90%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 90%;"></div>
-        </div>
+      <div class="skills-category reveal">
+        <h3>Front-end</h3>
+        <div class="skill"><div class="skill-name">HTML5 <span>90%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="90"></div></div></div>
+        <div class="skill"><div class="skill-name">CSS <span>80%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="80"></div></div></div>
+        <div class="skill"><div class="skill-name">Tailwind CSS <span>40%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="40"></div></div></div>
+        <div class="skill"><div class="skill-name">React <span>70%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="70"></div></div></div>
       </div>
-      <div class="skill">
-        <div class="skill-name">CSS <span>80%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 80%;"></div>
-        </div>
+
+      <div class="skills-category reveal">
+        <h3>Back-end</h3>
+        <div class="skill"><div class="skill-name">PHP <span>50%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="50"></div></div></div>
+        <div class="skill"><div class="skill-name">Node <span>70%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="70"></div></div></div>
+        <div class="skill"><div class="skill-name">Express <span>80%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="80"></div></div></div>
+        <div class="skill"><div class="skill-name">Spring Boot <span>45%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="45"></div></div></div>
+        <div class="skill"><div class="skill-name">NetBeans <span>45%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="45"></div></div></div>
       </div>
-      <div class="skill">
-        <div class="skill-name">Tailwind CSS <span>40%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 40%;"></div>
-        </div>
+
+      <div class="skills-category reveal">
+        <h3>Programming Languages</h3>
+        <div class="skill"><div class="skill-name">Java <span>65%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="65"></div></div></div>
+        <div class="skill"><div class="skill-name">JavaScript <span>75%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="75"></div></div></div>
+        <div class="skill"><div class="skill-name">Python <span>50%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="50"></div></div></div>
+        <div class="skill"><div class="skill-name">C <span>80%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="80"></div></div></div>
+        <div class="skill"><div class="skill-name">C++ <span>65%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="65"></div></div></div>
       </div>
-      <div class="skill">
-        <div class="skill-name">React <span>70%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 70%;"></div>
-        </div>
+
+      <div class="skills-category reveal">
+        <h3>Database</h3>
+        <div class="skill"><div class="skill-name">MySQL <span>65%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="65"></div></div></div>
+        <div class="skill"><div class="skill-name">SQLite <span>75%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="75"></div></div></div>
+        <div class="skill"><div class="skill-name">MongoDB <span>90%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="90"></div></div></div>
+        <div class="skill"><div class="skill-name">Oracle <span>40%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="40"></div></div></div>
       </div>
+
+      <div class="skills-category reveal">
+        <h3>Version Control</h3>
+        <div class="skill"><div class="skill-name">Git <span>70%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="70"></div></div></div>
+        <div class="skill"><div class="skill-name">GitHub <span>80%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="80"></div></div></div>
+      </div>
+
+      <div class="skills-category reveal">
+        <h3>Tools & Platforms</h3>
+        <div class="skill"><div class="skill-name">VSCode <span>90%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="90"></div></div></div>
+        <div class="skill"><div class="skill-name">Figma <span>85%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="85"></div></div></div>
+      </div>
+
+      <div class="skills-category reveal">
+        <h3>Testing Tools</h3>
+        <div class="skill"><div class="skill-name">Postman <span>75%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="75"></div></div></div>
+        <div class="skill"><div class="skill-name">Selenium <span>50%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="50"></div></div></div>
+        <div class="skill"><div class="skill-name">SonarQube <span>45%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="45"></div></div></div>
+      </div>
+
+      <div class="skills-category reveal">
+        <h3>Cloud</h3>
+        <div class="skill"><div class="skill-name">AWS <span>50%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="50"></div></div></div>
+        <div class="skill"><div class="skill-name">Azure <span>40%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="40"></div></div></div>
+      </div>
+
+      <div class="skills-category reveal">
+        <h3>Methodologies</h3>
+        <div class="skill"><div class="skill-name">Agile <span>70%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="70"></div></div></div>
+        <div class="skill"><div class="skill-name">SCRUM <span>55%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="55"></div></div></div>
+        <div class="skill"><div class="skill-name">Azure Board <span>60%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="60"></div></div></div>
+      </div>
+
+      <div class="skills-category reveal">
+        <h3>Others</h3>
+        <div class="skill"><div class="skill-name">CapCut PC <span>70%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="70"></div></div></div>
+        <div class="skill"><div class="skill-name">Canva <span>90%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="90"></div></div></div>
+        <div class="skill"><div class="skill-name">PicsArt <span>70%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="70"></div></div></div>
+        <div class="skill"><div class="skill-name">Alight Motion <span>40%</span></div><div class="skill-bar"><div class="skill-bar-fill" data-width="40"></div></div></div>
+      </div>
+
     </div>
-
-    <div class="skills-category">
-      <h3>Back-end</h3>
-      <div class="skill">
-        <div class="skill-name">PHP <span>50%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 50%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <div class="skill-name">Node <span>70%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 70%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <div class="skill-name">Express <span>80%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 80%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <div class="skill-name">Spring Boot <span>45%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 45%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <div class="skill-name">NetBeans <span>45%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 45%;"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="skills-category">
-      <h3>Programming Languages</h3>
-      <div class="skill">
-        <div class="skill-name">Java <span>65%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 65%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <div class="skill-name">JavaScript <span>75%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 75%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <div class="skill-name">Python <span>50%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 50%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <div class="skill-name">C <span>80%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 80%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <div class="skill-name">C++ <span>65%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 65%;"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="skills-category">
-      <h3>Database</h3>
-      <div class="skill">
-        <div class="skill-name">MySQL <span>65%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 65%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <div class="skill-name">SQLite <span>75%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 75%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <div class="skill-name">MongoDB <span>90%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 90%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <div class="skill-name">Oracle <span>40%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 40%;"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="skills-category">
-      <h3>Version Control</h3>
-      <div class="skill">
-        <div class="skill-name">Git <span>70%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 70%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <div class="skill-name">GitHub <span>80%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 80%;"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="skills-category">
-      <h3>Tools and Platforms</h3>
-      <div class="skill">
-        <div class="skill-name">VSCode <span>90%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 90%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <div class="skill-name">Figma <span>85%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 85%;"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="skills-category">
-      <h3>Automation & Testing Tools</h3>
-      <div class="skill">
-        <div class="skill-name">Postman <span>75%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 75%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <div class="skill-name">Selenium <span>50%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 50%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <div class="skill-name">SonarQube <span>45%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 45%;"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="skills-category">
-      <h3>Automation & Testing Tools</h3>
-      <div class="skill">
-        <div class="skill-name">AWS <span>50%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 50%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <div class="skill-name">Azure <span>40%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 40%;"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="skills-category">
-      <h3>Project Management</h3>
-      <div class="skill">
-        <div class="skill-name">Azure Board <span>60%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 60%;"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="skills-category">
-      <h3>Methodologies</h3>
-      <div class="skill">
-        <div class="skill-name">Agile <span>70%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 70%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <div class="skill-name">SCRUM <span>55%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 55%;"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="skills-category">
-      <h3>Others</h3>
-      <div class="skill">
-        <div class="skill-name">CapCut Pc <span>70%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 70%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <div class="skill-name">Canva <span>90%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 90%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <div class="skill-name">PicsArt <span>70%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 70%;"></div>
-        </div>
-      </div>
-      <div class="skill">
-        <div class="skill-name">Alight Motion <span>40%</span></div>
-        <div class="skill-bar">
-          <div class="skill-bar-fill" style="width: 40%;"></div>
-        </div>
-      </div>
-    </div>
-
   </section>
 
-
-  <!-- Projects Section -->
+  <!-- ============================================================
+       PROJECTS SECTION
+  ============================================================ -->
   <section id="projects">
-    <h2>My Projects</h2>
+    <h2 class="section-title reveal">My Projects <span class="line"></span></h2>
     <div class="project-gallery">
-      <div class="project-card" onclick="window.location.href='https://github.com/it22172778/ITPM-Translator-.git'">
-        <img src="projects/NextGen-Home.png" alt="NextGen Translator">
-        <img src="projects/NextGen-Admin.png" alt="NextGen Translator">
-        <h3>NEXTGEN</h3>
-        <p>Sinhalese and English Google Translator</p>
-        <p><em>Developed by using <span class="span">MERN Stack</span></em></p>
+
+      <div class="project-card reveal" onclick="window.location.href='https://github.com/it22172778/ITPM-Translator-.git'">
+        <div class="project-imgs">
+          <img src="projects/NextGen-Home.png" alt="NextGen Home">
+          <img src="projects/NextGen-Admin.png" alt="NextGen Admin">
+        </div>
+        <div class="project-info">
+          <h3>NEXTGEN</h3>
+          <p>Sinhalese and English Google Translator</p>
+          <span class="tech-tag">MERN Stack</span>
+        </div>
       </div>
-      <div class="project-card" onclick="window.location.href='https://github.com/IT22229502/ExploreMate.git'">
-        <img src="projects/ExploreMate-Home.png" alt="NextGen Translator">
-        <img src="projects/ExploreMate-Login.png" alt="NextGen Translator">
-        <h3>ExploreMate</h3>
-        <p>Travel Exploring Learning Platform</p>
-        <p><em>Developed by using <span class="span">React</span> and <span class="span">Spring Boot</span></em></p>
+
+      <div class="project-card reveal" onclick="window.location.href='https://github.com/IT22229502/ExploreMate.git'">
+        <div class="project-imgs">
+          <img src="projects/ExploreMate-Home.png" alt="ExploreMate Home">
+          <img src="projects/ExploreMate-Login.png" alt="ExploreMate Login">
+        </div>
+        <div class="project-info">
+          <h3>ExploreMate</h3>
+          <p>Travel Exploring Learning Platform</p>
+          <span class="tech-tag">React + Spring Boot</span>
+        </div>
       </div>
-      <div class="project-card" onclick="window.location.href='https://github.com/ZamranAhamed/Todo-Master.git'">
-        <img src="projects/ToDoMaster-AddTask.jpg" alt="NextGen Translator">
-        <img src="projects/ToDoMaster-Home.jpg" alt="NextGen Translator">
-        <h3>ToDo Master</h3>
-        <p>Task Manager Mobile App</p>
-        <p><em>Developed by using <span class="span">Kotlin</span> and <span class="span">Android Studio</span></em></p>
+
+      <div class="project-card reveal" onclick="window.location.href='https://github.com/ZamranAhamed/Todo-Master.git'">
+        <div class="project-imgs">
+          <img src="projects/ToDoMaster-AddTask.jpg" alt="ToDo Add">
+          <img src="projects/ToDoMaster-Home.jpg" alt="ToDo Home">
+        </div>
+        <div class="project-info">
+          <h3>ToDo Master</h3>
+          <p>Task Manager Mobile App</p>
+          <span class="tech-tag">Kotlin + Android Studio</span>
+        </div>
       </div>
-      <div class="project-card" onclick="window.location.href='https://github.com/ZamranAhamed/SivaTraders.git'">
-        <img src="projects/SivaTraders-Home.png" alt="NextGen Translator">
-        <img src="projects/SivaTraders-Login.png" alt="NextGen Translator">
-        <h3>SivaTraders</h3>
-        <p>E-Commerce Website</p>
-        <p><em>Developed by using <span class="span">MERN Stack</span></em></p>
+
+      <div class="project-card reveal" onclick="window.location.href='https://github.com/ZamranAhamed/SivaTraders.git'">
+        <div class="project-imgs">
+          <img src="projects/SivaTraders-Home.png" alt="SivaTraders Home">
+          <img src="projects/SivaTraders-Login.png" alt="SivaTraders Login">
+        </div>
+        <div class="project-info">
+          <h3>SivaTraders</h3>
+          <p>E-Commerce Website</p>
+          <span class="tech-tag">MERN Stack</span>
+        </div>
       </div>
-      <div class="project-card" onclick="window.location.href='https://github.com/ZamranAhamed/Userly-fronend.git'">
-        <img src="projects/Userly-Home.png" alt="NextGen Translator">
-        <img src="projects/Userly-Login.png" alt="NextGen Translator">
-        <h3>Userly</h3>
-        <p>Simple User Management System</p>
-        <p><em>Developed by using <span class="span">MERN Stack</span></em></p>
+
+      <div class="project-card reveal" onclick="window.location.href='https://github.com/ZamranAhamed/Userly-fronend.git'">
+        <div class="project-imgs">
+          <img src="projects/Userly-Home.png" alt="Userly Home">
+          <img src="projects/Userly-Login.png" alt="Userly Login">
+        </div>
+        <div class="project-info">
+          <h3>Userly</h3>
+          <p>Simple User Management System</p>
+          <span class="tech-tag">MERN Stack</span>
+        </div>
       </div>
-      <div class="project-card" onclick="window.location.href='https://github.com/ZamranAhamed/My-Portfolio.git'">
-        <img src="projects/Portfolio1.png" alt="NextGen Translator">
-        <img src="projects/Portfolio2.png" alt="NextGen Translator">
-        <h3>My Portfolio</h3>
-        <p>My Portfolio Website</p>
-        <p><em>Developed by using <span class="span">HTML,CSS</span> & <span class="span">JS</span></em></p>
+
+      <div class="project-card reveal" onclick="window.location.href='https://github.com/ZamranAhamed/My-Portfolio.git'">
+        <div class="project-imgs">
+          <img src="projects/Portfolio1.png" alt="Portfolio 1">
+          <img src="projects/Portfolio2.png" alt="Portfolio 2">
+        </div>
+        <div class="project-info">
+          <h3>My Portfolio</h3>
+          <p>My Portfolio Website</p>
+          <span class="tech-tag">HTML · CSS · JS</span>
+        </div>
       </div>
+
     </div>
   </section>
 
-  <!-- Experience Section -->
+  <!-- ============================================================
+       EXPERIENCE SECTION
+  ============================================================ -->
   <section id="experiences">
-    <h2>Experiences/Assessments</h2>
-
+    <h2 class="section-title reveal">Experiences &amp; Assessments <span class="line"></span></h2>
     <div class="experience-gallery">
 
-      <div class="experience-card"
-        onclick="window.location.href='https://drive.google.com/file/d/11fv36a_nLjeHK3iCV09Li243JphoX3JB/view?usp=sharing'">
-        <img src="experience/Logo Of Syncraft.jpeg" alt="Syncraft Logo">
-        <h3>Software Engineer Intern @ Syncraft IT Solutions (PVT) LTD</h3>
-        <ul>
-          <p>1. Delivered **full-stack client solutions** using MERN and Java stacks.</p>
-          <p>2. Ensured **cross-browser responsiveness** and provided comprehensive UI support.</p>
-        </ul>
-        <p><em> <span class="span">Oct 2025 – Present</span></em></p>
+      <div class="experience-card reveal" onclick="window.location.href='https://drive.google.com/file/d/11fv36a_nLjeHK3iCV09Li243JphoX3JB/view?usp=sharing'">
+        <div class="exp-imgs">
+          <img src="experience/Logo Of Syncraft.jpeg" alt="Syncraft Logo" style="object-fit:contain;background:#fff;">
+        </div>
+        <div class="exp-info">
+          <h3>Software Engineer Intern @ Syncraft IT Solutions (PVT) LTD</h3>
+          <p>1. Delivered full-stack client solutions using MERN and Java stacks.</p>
+          <p>2. Ensured cross-browser responsiveness and provided comprehensive UI support.</p>
+          <span class="tech-tag">Oct 2025 – Present</span>
+        </div>
       </div>
 
-      <div class="experience-card" onclick="window.location.href='https://github.com/ZamranAhamed/BookHanzer.git'">
-        <img src="experience/BookHanzer_01.png" alt="BookHanzer Screenshot 1">
-        <img src="experience/BookHanzer_02.png" alt="BookHanzer Screenshot 2">
-        <h3>BookHanzer</h3>
-        <ul>
+      <div class="experience-card reveal" onclick="window.location.href='https://github.com/ZamranAhamed/BookHanzer.git'">
+        <div class="exp-imgs">
+          <img src="experience/BookHanzer_01.png" alt="BookHanzer 1">
+          <img src="experience/BookHanzer_02.png" alt="BookHanzer 2">
+        </div>
+        <div class="exp-info">
+          <h3>BookHanzer</h3>
           <p>1. Simple Book management system</p>
           <p>2. Project was delivered within 2 days</p>
-        </ul>
-        <p><em>Developed by using <span class="span">Angular</span> with <span class="span">.NET</span></em></p>
+          <span class="tech-tag">Angular + .NET</span>
+        </div>
       </div>
 
-      <div class="experience-card"
-        onclick="window.location.href='https://www.figma.com/design/8niIdgClNYVaBy4UuJLA7H/Zentra---Event-booking-Web-pages?m=auto&t=13oMq3r31y15jzuE-1'">
-        <img src="experience/Zentra_Attendee Insights Page.png" alt="Events Booking Pages Screenshot 1">
-        <img src="experience/Zentra_Event Details Page.png" alt="Events Booking Pages Screenshot 2">
-        <h3>Events Booking Pages</h3>
-        <ul>
+      <div class="experience-card reveal" onclick="window.location.href='https://www.figma.com/design/8niIdgClNYVaBy4UuJLA7H/Zentra---Event-booking-Web-pages?m=auto&t=13oMq3r31y15jzuE-1'">
+        <div class="exp-imgs">
+          <img src="experience/Zentra_Attendee Insights Page.png" alt="Zentra 1">
+          <img src="experience/Zentra_Event Details Page.png" alt="Zentra 2">
+        </div>
+        <div class="exp-info">
+          <h3>Events Booking Pages</h3>
           <p>1. Simple Events Booking Web system's Design</p>
           <p>2. Project was delivered within 2 days</p>
-        </ul>
-        <p><em>Designed by using <span class="span">Figma</span></em></p>
+          <span class="tech-tag">Figma</span>
+        </div>
       </div>
 
-      <div class="experience-card" onclick="window.location.href='https://github.com/ZamranAhamed/ToDo-App.git'">
-        <img src="experience/Todo_ui-light.png" alt="MERN Todo Tasks Screenshot 1">
-        <img src="experience/Todo_ui-dark.png" alt="MERN Todo Tasks Screenshot 2">
-        <h3>MERN Todo Tasks</h3>
-        <ul>
+      <div class="experience-card reveal" onclick="window.location.href='https://github.com/ZamranAhamed/ToDo-App.git'">
+        <div class="exp-imgs">
+          <img src="experience/Todo_ui-light.png" alt="Todo Light">
+          <img src="experience/Todo_ui-dark.png" alt="Todo Dark">
+        </div>
+        <div class="exp-info">
+          <h3>MERN Todo Tasks</h3>
           <p>1. Simple Todo Web App</p>
-          <p>2. Project was delivered within 2 day</p>
-        </ul>
-        <p><em>Developed by using <span class="span">MERN Stack</span></em></p>
+          <p>2. Project was delivered within 2 days</p>
+          <span class="tech-tag">MERN Stack</span>
+        </div>
       </div>
 
-      <div class="experience-card"
-        onclick="window.location.href='https://github.com/ZamranAhamed/Mini-Service-Request-Board.git'">
-        <img src="experience/Mini-Jobs_day_home.png" alt="Mini Jobs Screenshot 1">
-        <img src="experience/Mini-Jobs_night_home.png" alt="Mini Jobs Screenshot 2">
-        <h3>Mini Jobs</h3>
-        <ul>
-          <p>1. Small web app where a homeowner can post a service request, and tradespeople can browse open requests,
-            view details, and mark them as in progress or closed. </p>
+      <div class="experience-card reveal" onclick="window.location.href='https://github.com/ZamranAhamed/Mini-Service-Request-Board.git'">
+        <div class="exp-imgs">
+          <img src="experience/Mini-Jobs_day_home.png" alt="Mini Jobs Day">
+          <img src="experience/Mini-Jobs_night_home.png" alt="Mini Jobs Night">
+        </div>
+        <div class="exp-info">
+          <h3>Mini Jobs</h3>
+          <p>1. Web app where homeowners can post service requests and tradespeople can browse, view details, and mark requests as in progress or closed.</p>
           <p>2. Project was delivered within 2 days</p>
-        </ul>
-        <p><em>Developed by using <span class="span">Next.js</span> with <span class="span">Node</span></em></p>
+          <span class="tech-tag">Next.js + Node</span>
+        </div>
       </div>
 
     </div>
   </section>
 
-  <!-- Contact Section -->
+  <!-- ============================================================
+       CONTACT SECTION
+  ============================================================ -->
   <section id="contact">
-    <h2>Contact Me</h2>
+    <h2 class="section-title reveal">Contact Me <span class="line"></span></h2>
+
     <div class="contact-top">
-      <div class="contact-item">
+      <div class="contact-item reveal">
         <img src="icons/location.svg" alt="Address Icon">
         <h4>Address</h4>
         <p>No 93/3, Old Church Road, Bakinigahawela, Bibile</p>
       </div>
-      <div class="contact-item">
+      <div class="contact-item reveal">
         <a href="tel:0776026403"><img src="icons/phone.svg" alt="Phone Icon"></a>
         <h4>Contact Number</h4>
         <p>+94 77 60 26 403</p>
       </div>
-      <div class="contact-item">
+      <div class="contact-item reveal">
         <a href="mailto:zamranahamed7@gmail.com"><img src="icons/email.svg" alt="Email Icon"></a>
         <h4>Email Address</h4>
         <p>zamranahamed7@gmail.com</p>
       </div>
-      <div class="contact-item">
+      <div class="contact-item reveal">
         <a href="https://my-portfolio-six-black-31.vercel.app"><img src="icons/web.svg" alt="Web Icon"></a>
         <h4>Website</h4>
         <p>zamranahamed.github.io</p>
       </div>
     </div>
 
-    <div class="contact-form-container">
+    <div class="contact-form-container reveal">
       <div class="contact-image">
-        <img src="images/Me_Official_rermoved_background.png" alt="Your Image">
+        <img src="images/Me_Official_rermoved_background.png" alt="Zamran Ahamed">
       </div>
       <form id="contactform">
         <input type="text" id="name" placeholder="Your Name" required>
         <input type="email" id="email" placeholder="Your Email" required>
         <input type="text" id="subject" placeholder="Subject" required>
         <textarea id="message" placeholder="Message" required></textarea>
-        <button type="submit" class="btn-yellow">Send Message</button>
+        <button type="submit" class="btn-gold">Send Message →</button>
       </form>
     </div>
   </section>
 
-  <!-- Footer Section -->
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
   <footer>
     <div class="footer-grid">
-      <!-- About Column -->
       <div class="footer-column">
-        <h4>About</h4>
+        <h4>Follow Me</h4>
         <div class="footer-socials">
-          <a href="https://www.facebook.com/share/19F9QhpaJd/?mibextid=qi2Omg"><img src="icons/facebook.svg"
-              alt="Facebook"></a>
-          <a href="https://www.instagram.com/zamran.ahamed.1?igsh=MWNtNnl3MmQ3M3Y4"><img src="icons/instagram.svg"
-              alt="Instagram"></a>
-          <a href="https://www.linkedin.com/in/zamran-ahamed-47a1852b5/"><img src="icons/linkedin.svg"
-              alt="LinkedIn"></a>
-          1<a href="https://github.com/ZamranAhamed"><img src="icons/github.svg" alt="GitHub"></a>
-          2<a href="https://github.com/IT22229502"><img src="icons/github.svg" alt="GitHub"></a>
+          <a href="https://www.facebook.com/share/19F9QhpaJd/?mibextid=qi2Omg"><img src="icons/facebook.svg" alt="Facebook"></a>
+          <a href="https://www.instagram.com/zamran.ahamed.1?igsh=MWNtNnl3MmQ3M3Y4"><img src="icons/instagram.svg" alt="Instagram"></a>
+          <a href="https://www.linkedin.com/in/zamran-ahamed-47a1852b5/"><img src="icons/linkedin.svg" alt="LinkedIn"></a>
+          <a href="https://github.com/ZamranAhamed"><img src="icons/github.svg" alt="GitHub 1"></a>
+          <a href="https://github.com/IT22229502"><img src="icons/github.svg" alt="GitHub 2"></a>
           <a href="https://wa.me/0729065778"><img src="icons/whatsapp.svg" alt="WhatsApp"></a>
         </div>
       </div>
 
-      <!-- Links Column -->
       <div class="footer-column">
-        <h4>Links</h4>
+        <h4>Quick Links</h4>
         <ul class="footer-links">
           <li><a href="#home">Home</a></li>
           <li><a href="#about">About</a></li>
@@ -574,20 +1288,133 @@
         </ul>
       </div>
 
-      <!-- Contact Info Column -->
       <div class="footer-column">
-        <h4>Have a Questions?</h4>
-        <p><img src="icons/location.svg" alt=""> No 93/3, Old Church Road, Bakinigahawela, Bibile Srilanka</p>
+        <h4>Have a Question?</h4>
+        <p><img src="icons/location.svg" alt=""> No 93/3, Old Church Road, Bakinigahawela, Bibile, Sri Lanka</p>
         <p><img src="icons/phone.svg" alt=""> +94 77 60 264 03 | +94 72 90 65 778</p>
         <p><img src="icons/email.svg" alt=""> zamranahamed7@gmail.com</p>
       </div>
     </div>
 
-    <!-- Copyright Bottom -->
     <div class="footer-bottom">
-      <p>Copyright ©2025 All rights reserved 💛 by Zamran Ahamed</p>
+      <p>Copyright © 2025 All rights reserved 💛 by Zamran Ahamed</p>
     </div>
   </footer>
-</body>
 
+  <!-- ============================================================
+       JAVASCRIPT — Particles, Cursor, Scroll Reveal, Skill Bars
+  ============================================================ -->
+  <script>
+    // ---- CUSTOM CURSOR ----
+    const dot = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx + 'px'; dot.style.top = my + 'px'; });
+    function animRing() {
+      rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(animRing);
+    }
+    animRing();
+
+    // ---- NAVBAR SCROLL ----
+    const header = document.getElementById('main-header');
+    window.addEventListener('scroll', () => { header.classList.toggle('scrolled', window.scrollY > 60); });
+
+    // ---- PARTICLE CANVAS ----
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, particles = [];
+
+    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', resize);
+
+    class Particle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * W;
+        this.y = Math.random() * H;
+        this.r = Math.random() * 1.5 + 0.3;
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = (Math.random() - 0.5) * 0.3;
+        this.alpha = Math.random() * 0.5 + 0.1;
+        this.gold = Math.random() > 0.7;
+      }
+      update() {
+        this.x += this.vx; this.y += this.vy;
+        if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = this.gold
+          ? `rgba(245,197,24,${this.alpha})`
+          : `rgba(200,200,255,${this.alpha * 0.5})`;
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < 160; i++) particles.push(new Particle());
+
+    // connection lines between nearby particles
+    function drawConnections() {
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            const alpha = (1 - dist / 120) * 0.06;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(245,197,24,${alpha})`;
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function animCanvas() {
+      ctx.clearRect(0, 0, W, H);
+      particles.forEach(p => { p.update(); p.draw(); });
+      drawConnections();
+      requestAnimationFrame(animCanvas);
+    }
+    animCanvas();
+
+    // ---- SCROLL REVEAL ----
+    const revealEls = document.querySelectorAll('.reveal');
+    const revealObs = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => { e.target.classList.add('visible'); }, i * 60);
+          revealObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => revealObs.observe(el));
+
+    // ---- SKILL BAR ANIMATION ----
+    const skillBars = document.querySelectorAll('.skill-bar-fill');
+    const skillObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.width = e.target.dataset.width + '%';
+          skillObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    skillBars.forEach(bar => skillObs.observe(bar));
+
+    // ---- MOUSE PARALLAX FOR ORB-1 ----
+    document.addEventListener('mousemove', e => {
+      const rx2 = (e.clientX / window.innerWidth - 0.5) * 30;
+      const ry2 = (e.clientY / window.innerHeight - 0.5) * 20;
+      document.querySelector('.orb-1').style.transform = `translate(${rx2}px,${ry2}px)`;
+    });
+  </script>
+</body>
 </html>
