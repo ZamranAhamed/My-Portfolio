@@ -209,7 +209,9 @@
     .proj-card:hover .proj-overlay{opacity:1}
     .proj-body{padding:1.3rem 1.6rem 1.7rem}
     .proj-body h3{font-family:var(--font-d);font-size:1.05rem;font-weight:700;margin-bottom:.3rem}
-    .proj-body p{font-size:.82rem;color:var(--text-2);margin-bottom:.7rem}
+    .proj-body p{font-size:.82rem;color:var(--text-2);margin-bottom:.55rem}
+    .project-date{display:flex;align-items:center;gap:7px;margin-bottom:.75rem;font-size:.73rem;color:var(--text-2);letter-spacing:.03em}
+    .project-date::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px rgba(245,197,24,.55);flex-shrink:0}
     .tag{display:inline-flex;align-items:center;font-size:.72rem;color:var(--gold);background:rgba(245,197,24,.08);border:1px solid rgba(245,197,24,.18);padding:3px 10px;border-radius:100px;font-weight:500;letter-spacing:.03em}
 
     /* ── EXPERIENCE ──────────────────────────────── */
@@ -227,6 +229,7 @@
     .exp-body{padding:1.3rem 1.6rem 1.7rem}
     .exp-body h3{font-family:var(--font-d);font-size:.98rem;font-weight:700;margin-bottom:.5rem}
     .exp-body p{font-size:.8rem;color:var(--text-2);margin-bottom:.25rem;line-height:1.5}
+    .exp-body .project-date{margin-top:.6rem}
     .exp-body .tag{margin-top:.7rem}
 
     /* ── CONTACT ─────────────────────────────────── */
@@ -549,29 +552,29 @@
     <div class="sh-bar"></div>
   </div>
   <div class="proj-grid">
-    <div class="proj-card reveal" onclick="window.location.href='https://github.com/it22172778/ITPM-Translator-.git'">
+    <div class="proj-card reveal" style="order:3" onclick="window.location.href='https://github.com/it22172778/ITPM-Translator-.git'">
       <div class="proj-imgs"><img src="projects/NextGen-Home.png" alt="NextGen Home"><img src="projects/NextGen-Admin.png" alt="NextGen Admin"><div class="proj-overlay"></div></div>
-      <div class="proj-body"><h3>NEXTGEN</h3><p>Sinhalese and English Google Translator</p><span class="tag">MERN Stack</span></div>
+      <div class="proj-body"><h3>NEXTGEN</h3><p>Sinhalese and English Google Translator</p><span class="project-date" title="Completed on March 24, 2025">1 year ago</span><span class="tag">MERN Stack</span></div>
     </div>
-    <div class="proj-card reveal" onclick="window.location.href='https://github.com/IT22229502/ExploreMate.git'">
+    <div class="proj-card reveal" style="order:2" onclick="window.location.href='https://github.com/IT22229502/ExploreMate.git'">
       <div class="proj-imgs"><img src="projects/ExploreMate-Home.png" alt="ExploreMate Home"><img src="projects/ExploreMate-Login.png" alt="ExploreMate Login"><div class="proj-overlay"></div></div>
-      <div class="proj-body"><h3>ExploreMate</h3><p>Travel Exploring Learning Platform</p><span class="tag">React + Spring Boot</span></div>
+      <div class="proj-body"><h3>ExploreMate</h3><p>Travel Exploring Learning Platform</p><span class="project-date" title="Completed on April 15, 2025">1 year ago</span><span class="tag">React + Spring Boot</span></div>
     </div>
-    <div class="proj-card reveal" onclick="window.location.href='https://github.com/ZamranAhamed/Todo-Master.git'">
+    <div class="proj-card reveal" style="order:5" onclick="window.location.href='https://github.com/ZamranAhamed/Todo-Master.git'">
       <div class="proj-imgs"><img src="projects/ToDoMaster-AddTask.jpg" alt="ToDo Add"><img src="projects/ToDoMaster-Home.jpg" alt="ToDo Home"><div class="proj-overlay"></div></div>
-      <div class="proj-body"><h3>ToDo Master</h3><p>Task Manager Mobile App</p><span class="tag">Kotlin + Android Studio</span></div>
+      <div class="proj-body"><h3>ToDo Master</h3><p>Task Manager Mobile App</p><span class="project-date" title="Completed on April 05, 2024">2 years ago</span><span class="tag">Kotlin + Android Studio</span></div>
     </div>
-    <div class="proj-card reveal" onclick="window.location.href='https://github.com/ZamranAhamed/SivaTraders.git'">
+    <div class="proj-card reveal" style="order:6" onclick="window.location.href='https://github.com/ZamranAhamed/SivaTraders.git'">
       <div class="proj-imgs"><img src="projects/SivaTraders-Home.png" alt="SivaTraders Home"><img src="projects/SivaTraders-Login.png" alt="SivaTraders Login"><div class="proj-overlay"></div></div>
-      <div class="proj-body"><h3>SivaTraders</h3><p>E-Commerce Website</p><span class="tag">MERN Stack</span></div>
+      <div class="proj-body"><h3>SivaTraders</h3><p>E-Commerce Website</p><span class="project-date" title="Completed on March 18, 2024">2 years ago</span><span class="tag">MERN Stack</span></div>
     </div>
-    <div class="proj-card reveal" onclick="window.location.href='https://github.com/ZamranAhamed/Userly-fronend.git'">
+    <div class="proj-card reveal" style="order:4" onclick="window.location.href='https://github.com/ZamranAhamed/Userly-fronend.git'">
       <div class="proj-imgs"><img src="projects/Userly-Home.png" alt="Userly Home"><img src="projects/Userly-Login.png" alt="Userly Login"><div class="proj-overlay"></div></div>
-      <div class="proj-body"><h3>Userly</h3><p>Simple User Management System</p><span class="tag">MERN Stack</span></div>
+      <div class="proj-body"><h3>Userly</h3><p>Simple User Management System</p><span class="project-date" title="Completed on August 27, 2024">1 year ago</span><span class="tag">MERN Stack</span></div>
     </div>
-    <div class="proj-card reveal" onclick="window.location.href='https://github.com/ZamranAhamed/My-Portfolio.git'">
+    <div class="proj-card reveal" style="order:1" onclick="window.location.href='https://github.com/ZamranAhamed/My-Portfolio.git'">
       <div class="proj-imgs"><img src="projects/Portfolio1.png" alt="Portfolio 1"><img src="projects/Portfolio2.png" alt="Portfolio 2"><div class="proj-overlay"></div></div>
-      <div class="proj-body"><h3>My Portfolio</h3><p>My Portfolio Website</p><span class="tag">HTML · CSS · JS</span></div>
+      <div class="proj-body"><h3>My Portfolio</h3><p>My Portfolio Website</p><span class="project-date" title="Completed on May 13, 2025">1 year ago</span><span class="tag">HTML · CSS · JS</span></div>
     </div>
   </div>
 </section>
@@ -586,25 +589,25 @@
     <div class="sh-bar"></div>
   </div>
   <div class="exp-grid">
-    <div class="exp-card reveal" onclick="window.location.href='https://drive.google.com/file/d/11fv36a_nLjeHK3iCV09Li243JphoX3JB/view?usp=sharing'">
+    <div class="exp-card reveal" style="order:1" onclick="window.location.href='https://drive.google.com/file/d/11fv36a_nLjeHK3iCV09Li243JphoX3JB/view?usp=sharing'">
       <div class="exp-imgs"><img src="experience/Logo Of Syncraft.jpeg" alt="Syncraft" style="object-fit:contain;background:#fff"></div>
       <div class="exp-body"><h3>Software Engineer Intern @ Syncraft IT Solutions (PVT) LTD</h3><p>1. Delivered full-stack client solutions using MERN and Java stacks.</p><p>2. Ensured cross-browser responsiveness and comprehensive UI support.</p><span class="tag">Oct 2025 – Present</span></div>
     </div>
-    <div class="exp-card reveal" onclick="window.location.href='https://github.com/ZamranAhamed/BookHanzer.git'">
+    <div class="exp-card reveal" style="order:5" onclick="window.location.href='https://github.com/ZamranAhamed/BookHanzer.git'">
       <div class="exp-imgs"><img src="experience/BookHanzer_01.png" alt="BookHanzer 1"><img src="experience/BookHanzer_02.png" alt="BookHanzer 2"></div>
-      <div class="exp-body"><h3>BookHanzer</h3><p>1. Simple Book management system</p><p>2. Delivered within 2 days</p><span class="tag">Angular + .NET</span></div>
+      <div class="exp-body"><h3>BookHanzer</h3><p>1. Simple Book management system</p><p>2. Delivered within 2 days</p><span class="project-date" title="Completed on June 15, 2025">11 months ago</span><span class="tag">Angular + .NET</span></div>
     </div>
-    <div class="exp-card reveal" onclick="window.location.href='https://www.figma.com/design/8niIdgClNYVaBy4UuJLA7H/Zentra---Event-booking-Web-pages?m=auto&t=13oMq3r31y15jzuE-1'">
+    <div class="exp-card reveal" style="order:4" onclick="window.location.href='https://www.figma.com/design/8niIdgClNYVaBy4UuJLA7H/Zentra---Event-booking-Web-pages?m=auto&t=13oMq3r31y15jzuE-1'">
       <div class="exp-imgs"><img src="experience/Zentra_Attendee Insights Page.png" alt="Zentra 1"><img src="experience/Zentra_Event Details Page.png" alt="Zentra 2"></div>
-      <div class="exp-body"><h3>Events Booking Pages</h3><p>1. Events Booking Web system design</p><p>2. Delivered within 2 days</p><span class="tag">Figma</span></div>
+      <div class="exp-body"><h3>Events Booking Pages</h3><p>1. Events Booking Web system design</p><p>2. Delivered within 2 days</p><span class="project-date" title="Completed on January 10, 2026">4 months ago</span><span class="tag">Figma</span></div>
     </div>
-    <div class="exp-card reveal" onclick="window.location.href='https://github.com/ZamranAhamed/ToDo-App.git'">
+    <div class="exp-card reveal" style="order:3" onclick="window.location.href='https://github.com/ZamranAhamed/ToDo-App.git'">
       <div class="exp-imgs"><img src="experience/Todo_ui-light.png" alt="Todo Light"><img src="experience/Todo_ui-dark.png" alt="Todo Dark"></div>
-      <div class="exp-body"><h3>MERN Todo Tasks</h3><p>1. Simple Todo Web App</p><p>2. Delivered within 2 days</p><span class="tag">MERN Stack</span></div>
+      <div class="exp-body"><h3>MERN Todo Tasks</h3><p>1. Simple Todo Web App</p><p>2. Delivered within 2 days</p><span class="project-date" title="Completed on April 29, 2026">1 month ago</span><span class="tag">MERN Stack</span></div>
     </div>
-    <div class="exp-card reveal" onclick="window.location.href='https://github.com/ZamranAhamed/Mini-Service-Request-Board.git'">
+    <div class="exp-card reveal" style="order:2" onclick="window.location.href='https://github.com/ZamranAhamed/Mini-Service-Request-Board.git'">
       <div class="exp-imgs"><img src="experience/Mini-Jobs_day_home.png" alt="Mini Jobs Day"><img src="experience/Mini-Jobs_night_home.png" alt="Mini Jobs Night"></div>
-      <div class="exp-body"><h3>Mini Jobs</h3><p>1. Homeowners post service requests; tradespeople browse, view details, and manage request status.</p><p>2. Delivered within 2 days</p><span class="tag">Next.js + Node</span></div>
+      <div class="exp-body"><h3>Mini Jobs</h3><p>1. Homeowners post service requests; tradespeople browse, view details, and manage request status.</p><p>2. Delivered within 2 days</p><span class="project-date" title="Completed on May 17, 2026">May 17, 2026</span><span class="tag">Next.js + Node</span></div>
     </div>
   </div>
 </section>
